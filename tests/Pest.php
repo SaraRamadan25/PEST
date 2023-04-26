@@ -12,6 +12,8 @@
 */
 
 use App\Models\User;
+use Illuminate\Support\Str;
+use PHPUnit\Framework\ExpectationFailedException;
 
 uses(Tests\TestCase::class)->in('Feature');
 
@@ -25,10 +27,21 @@ uses(Tests\TestCase::class)->in('Feature');
 | to assert different things. Of course, you may extend the Expectation API at any time.
 |
 */
+expect()->extend('toBePhoneNumber',function (){
 
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
+    expect($this->value)->toBeString()->toStartWith('+');
+    if (strlen($this->value) < 6) {
+        throw new ExpectationFailedException('Phone Number Must be at Least 6 chars');
+    }
+    // this output here will be an OBJ , so we want to convert it to a string.
+    if (! is_numeric(Str::of($this->value)->after('+')->remove([' ', '-'])->__toString())) {
+        throw new ExpectationFailedException('Phone numbers must be numeric.');
+    }
+
+
 });
+
+
 
 /*
 |--------------------------------------------------------------------------
