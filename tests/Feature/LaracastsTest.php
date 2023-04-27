@@ -9,8 +9,9 @@ it('can validate an email', function (){
 
 it('throws an exception if the value is not a string',function (){
     $rule  = new App\Rules\IsValidEmailAddress();
+
     $rule->passes('email',1);
-})->skip(getenv('SKIP_TESTS') ?? false ,'we no longer want to test the exception')
+})->skip(fn()=>config('app.name')=== 'foo' ,'we no longer want to test the exception')
     ->throws(InvalidArgumentException::class,'The value must be a string!');
 
 // we can skip without conditions, just skipping,
